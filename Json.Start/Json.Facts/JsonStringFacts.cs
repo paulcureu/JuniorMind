@@ -95,7 +95,7 @@ namespace Json.Facts
             Assert.True(IsJsonString(Quoted(@"a \r b")));
         }
 
-        [Fact(Skip = "Remove this Skip as you implement")]
+        [Fact]
         public void CanContainEscapedHorizontalTab()
         {
             Assert.True(IsJsonString(Quoted(@"a \t b")));
