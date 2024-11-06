@@ -16,7 +16,7 @@ namespace Json
                 return false;
             }
 
-            return double.TryParse(input, out double result);
+            return double.TryParse(input, out double result) && input[^1] != '.';
         }
     }
 }
