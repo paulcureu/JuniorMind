@@ -44,6 +44,11 @@ namespace Json
 
         private static bool IsNumber(string input)
         {
+            if (input[^1] == '.')
+            {
+                return false;
+            }
+
             int digit = input.Length;
             if (input.Contains("."))
             {
