@@ -16,7 +16,7 @@ namespace Json
                 return false;
             }
 
-            if (input.Length > 1 && input[0] == '0')
+            if (input.Length > 1 && input[0] == '0' && !input.Contains("."))
             {
                 return false;
             }
