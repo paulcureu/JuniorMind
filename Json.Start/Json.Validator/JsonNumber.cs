@@ -45,6 +45,10 @@ namespace Json
         private static bool IsNumber(string input)
         {
             int digit = input.Length;
+            if (input.Contains("."))
+            {
+                digit--;
+            }
 
             foreach (char c in input)
             {
