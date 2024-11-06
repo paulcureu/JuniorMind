@@ -21,7 +21,12 @@ namespace Json
                 return false;
             }
 
-            return !IsLetter(input) && IsDigit(input);
+            if (input[0] == '-')
+            {
+                return true;
+            }
+
+            return !IsLetter(input) && IsNumber(input);
         }
 
         private static bool IsLetter(string input)
@@ -37,9 +42,10 @@ namespace Json
             return false;
         }
 
-        private static bool IsDigit(string input)
+        private static bool IsNumber(string input)
         {
             int digit = input.Length;
+
             foreach (char c in input)
             {
                 if (char.IsDigit(c))
