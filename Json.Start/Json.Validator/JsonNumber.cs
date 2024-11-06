@@ -11,6 +11,11 @@ namespace Json
 
         private static bool IsDouble(string input)
         {
+            if (!string.IsNullOrEmpty(input) && input.Length > 1 && !input.Contains('.') && input[0] == '0')
+            {
+                return false;
+            }
+
             return double.TryParse(input, out double result);
         }
     }
