@@ -16,6 +16,11 @@ namespace Json
                 return false;
             }
 
+            if (input.Length > 1 && input[0] == '0')
+            {
+                return false;
+            }
+
             return !IsLetter(input) && IsDigit(input);
         }
 
