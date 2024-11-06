@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Reflection;
 
 namespace Json
 {
@@ -6,99 +8,65 @@ namespace Json
     {
         public static bool IsJsonNumber(string input)
         {
-            return ExceptionalCase(input) && !IsLetter(input) && IsNumber(input);
+            return ExceptionalCase(input) && IsLetter(input) && IsNumber(input);
         }
 
         private static bool ExceptionalCase(string input)
         {
-            if (string.IsNullOrEmpty(input))
-            {
-                return false;
-            }
+            return IsNullOrEmptyString(input) && IsFirstDigitZero(input) && IsExponentComplete(input);
+        }
 
-            if (input.Length > 1 && input[0] == '0' && !input.Contains("."))
-            {
-                return false;
-            }
+        private static bool IsNullOrEmptyString(string input)
+        {
+            return !string.IsNullOrEmpty(input);
+        }
 
-            if (input[^1] == '+' || input[^1] == '-' || input[^1] == 'e')
-            {
-                return false;
-            }
+        private static bool IsFirstDigitZero(string input)
+        {
+            return input.Length <= 1 || input[0] != '0' || input.Contains('.');
+        }
 
-            if (input[0] == '-')
+        private static bool IsExponentComplete(string input)
+        {
+            return input[^1] != '+' && input[^1] != '-' && input[^1] != 'e';
+        }
+
+        private static bool IsLetter(string input)
+        {
+            foreach (char c in input)
             {
-                return true;
+                if (char.IsLetter(c) && c != 'e' && c != 'E')
+                {
+                    return false;
+                }
             }
 
             return true;
         }
 
-        private static bool IsLetter(string input)
+        private static bool ExponentIsAfterTheFraction(string input)
         {
-            int index = 0;
-            int findE = 0;
-            int findDot = 0;
-            int toMuchE = 0;
-            foreach (char c in input)
-            {
-                if (char.IsLetter(c) && c != 'e' && c != 'E')
-                {
-                    return true;
-                }
+            return !(input.Contains('e') && input.Contains('.')) || input.IndexOf('e') > input.IndexOf('.');
+        }
 
-                if (c == 'e')
-                {
-                    findE = index;
-                    toMuchE++;
-                }
-
-                if (c == '.')
-                {
-                    findDot = index;
-                }
-
-                index++;
-            }
-
-            if (input[0] == 'e' || (findE < findDot && findE > 0))
-            {
-                return true;
-            }
-
-            return toMuchE > 1;
+        private static bool ToManyExponents(string input)
+        {
+            return input.Count(c => c == 'e' || c == 'E') <= 1;
         }
 
         private static bool IsNumber(string input)
         {
-            if (input[^1] == '.')
-            {
-                return false;
-            }
+            return !NumberEndsWithDot(input) && IsMoreThanOneFractionalPart(input) && ExponentIsAfterTheFraction(input) && ToManyExponents(input);
+        }
 
-            int digit = input.Length;
-            if (input.Contains("."))
-            {
-                digit--;
-            }
+        private static bool NumberEndsWithDot(string input)
+        {
+            return input.EndsWith(".");
+        }
 
-            for (int i = 0; i < input.Length; i++)
-            {
-                if (input[i] == 'e' || input[i] == 'E' || input[i] == '+' || input[i] == '-')
-                {
-                    digit--;
-                }
-            }
-
-            foreach (char c in input)
-            {
-                if (char.IsDigit(c))
-                {
-                    digit--;
-                }
-            }
-
-            return digit == 0;
+        private static bool IsMoreThanOneFractionalPart(string input)
+        {
+            return input.Count(c => c == '.') <= 1;
         }
     }
 }
