@@ -57,7 +57,7 @@ namespace Json
 
             for (int i = 0; i < input.Length; i++)
             {
-                if (input[i] == 'e' || input[i] == 'E')
+                if (input[i] == 'e' || input[i] == 'E' || input[i] == '+' || input[i] == '-')
                 {
                     digit--;
                 }
