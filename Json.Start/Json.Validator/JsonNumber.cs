@@ -11,15 +11,34 @@ namespace Json
 
         private static bool IsDouble(string input)
         {
+            return !IsLetter(input) && IsDigit(input);
+        }
+
+        private static bool IsLetter(string input)
+        {
             foreach (char c in input)
             {
                 if (char.IsLetter(c))
                 {
-                    return false;
+                    return true;
                 }
             }
 
-            return input == "0";
+            return false;
+        }
+
+        private static bool IsDigit(string input)
+        {
+            int digit = input.Length;
+            foreach (char c in input)
+            {
+                if (char.IsDigit(c))
+                {
+                    digit--;
+                }
+            }
+
+            return digit == 0;
         }
     }
 }
