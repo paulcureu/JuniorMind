@@ -21,6 +21,11 @@ namespace Json
                 return false;
             }
 
+            if (input[^1] == '+' || input[^1] == '-' || input[^1] == 'e')
+            {
+                return false;
+            }
+
             if (input[0] == '-')
             {
                 return true;
