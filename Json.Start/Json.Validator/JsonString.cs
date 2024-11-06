@@ -36,7 +36,11 @@ namespace Json
         {
             for (int i = 0; i < input.Length - 1; i++)
             {
-                if (input[i] == '\\' && !char.IsLetter(input[i + 1]))
+                if (input[i] == '\\' && i + 1 == input.Length - 1)
+                {
+                    return false;
+                }
+                else if (input[i] == '\\' && !char.IsLetter(input[i + 1]))
                 {
                     return true;
                 }
