@@ -44,17 +44,41 @@ namespace Json
                 {
                     return true;
                 }
-                else if (input[i] == '\\' && IsExcapeCharacter(input[i + 1]))
-                {
-                    return true;
-                }
                 else if (input[i] == '\\' && !IsExcapeCharacter(input[i + 1]))
                 {
                     return false;
                 }
+                else if (input[i] == '\\' && input[i + 1] == 'u')
+                {
+                    return IsHexNumber(input.Substring(i + 1));
+                }
             }
 
             return true;
+        }
+
+        private static bool IsHexNumber(string input)
+        {
+            int digits = 4;
+            if (input.Length > digits + 1) // check if the hex number is at the end of the string
+            {
+                return true;
+            }
+
+            for (int i = 1; i < input.Length - 1; i++)
+            {
+                if (IsHexDigit(input[i]))
+                {
+                    digits--;
+                }
+            }
+
+            return digits == 0;
+        }
+
+        private static bool IsHexDigit(char c)
+        {
+            return char.IsDigit(c) || (char.ToLower(c) >= 'a' && char.ToLower(c) <= 'f');
         }
 
         private static bool IsExcapeCharacter(char character)
