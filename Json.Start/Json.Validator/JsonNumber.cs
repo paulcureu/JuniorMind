@@ -6,10 +6,10 @@ namespace Json
     {
         public static bool IsJsonNumber(string input)
         {
-            return IsDouble(input);
+            return ExceptionalCase(input) && !IsLetter(input) && IsNumber(input);
         }
 
-        private static bool IsDouble(string input)
+        private static bool ExceptionalCase(string input)
         {
             if (string.IsNullOrEmpty(input))
             {
@@ -31,11 +31,14 @@ namespace Json
                 return true;
             }
 
-            return !IsLetter(input) && IsNumber(input);
+            return true;
         }
 
         private static bool IsLetter(string input)
         {
+            int index = 0;
+            int findE = 0;
+            int findDot = 0;
             int toMuchE = 0;
             foreach (char c in input)
             {
@@ -46,8 +49,21 @@ namespace Json
 
                 if (c == 'e')
                 {
+                    findE = index;
                     toMuchE++;
                 }
+
+                if (c == '.')
+                {
+                    findDot = index;
+                }
+
+                index++;
+            }
+
+            if (input[0] == 'e' || (findE < findDot && findE > 0))
+            {
+                return true;
             }
 
             return toMuchE > 1;
