@@ -36,15 +36,21 @@ namespace Json
 
         private static bool IsLetter(string input)
         {
+            int toMuchE = 0;
             foreach (char c in input)
             {
                 if (char.IsLetter(c) && c != 'e' && c != 'E')
                 {
                     return true;
                 }
+
+                if (c == 'e')
+                {
+                    toMuchE++;
+                }
             }
 
-            return false;
+            return toMuchE > 1;
         }
 
         private static bool IsNumber(string input)
