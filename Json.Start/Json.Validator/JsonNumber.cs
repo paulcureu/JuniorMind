@@ -11,6 +11,11 @@ namespace Json
 
         private static bool IsDouble(string input)
         {
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+
             return !IsLetter(input) && IsDigit(input);
         }
 
