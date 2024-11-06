@@ -33,7 +33,7 @@ namespace Json
         {
             foreach (char c in input)
             {
-                if (char.IsLetter(c) && c != 'e')
+                if (char.IsLetter(c) && c != 'e' && c != 'E')
                 {
                     return true;
                 }
@@ -57,7 +57,7 @@ namespace Json
 
             for (int i = 0; i < input.Length; i++)
             {
-                if (input[i] == 'e')
+                if (input[i] == 'e' || input[i] == 'E')
                 {
                     digit--;
                 }
