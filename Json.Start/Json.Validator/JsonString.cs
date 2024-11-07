@@ -34,19 +34,14 @@ namespace Json
 
         private static bool ContainsExcapeCharacter(string input)
         {
-            if (input.Contains('/'))
-            {
-                return true;
-            }
-
             for (int i = 0; i < input.Length - 1; i++)
             {
-                if (input[i] == '\\' && !char.IsWhiteSpace(input[i + 1]) && !IsExcapeCharacter(input[i + 1]))
+                if (input[i] == '\\' && !char.IsWhiteSpace(input[i + 1]) && !IsExcapeCharacter(input[i + 1]) && input[i + 1] != '/')
                 {
                     return false;
                 }
 
-                if (input[i] == '\\' && input[i + 1] == 'u' && !IsHexNumber(input.Substring(i + 1)))
+                if (input[i] == '\\' && input[i + 1] == 'u' && !IsHexNumber(input.Substring(i + 1)) && input[i + 1] != '/')
                 {
                     return false;
                 }
