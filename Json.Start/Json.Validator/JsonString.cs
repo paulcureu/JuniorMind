@@ -23,7 +23,7 @@ namespace Json
         {
             for (int i = 0; i < input.Length - 1; i++)
             {
-                if (IsControlCharacter(input[i + 1]))
+                if (IsControlCharacter(input[i]))
                 {
                     return false;
                 }
