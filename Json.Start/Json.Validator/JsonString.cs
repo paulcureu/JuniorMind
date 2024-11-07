@@ -34,41 +34,36 @@ namespace Json
 
         private static bool ContainsExcapeCharacter(string input)
         {
+            if (input.Contains('/'))
+            {
+                return true;
+            }
+
             for (int i = 0; i < input.Length - 1; i++)
             {
-                if (input[i] == '\\' && (!IsExcapeCharacter(input[i + 1]) || i + 1 == input.Length - 1))
+                if (input[i] == '\\' && !char.IsWhiteSpace(input[i + 1]) && !IsExcapeCharacter(input[i + 1]))
                 {
-                    if (i > 0 && input[i - 1] == '\\')
-                    {
-                        continue;
-                    }
+                    return false;
+                }
 
+                if (input[i] == '\\' && input[i + 1] == 'u' && !IsHexNumber(input.Substring(i + 1)))
+                {
                     return false;
                 }
             }
 
-            return ContainsHexNumber(input);
-        }
-
-        private static bool ContainsHexNumber(string input)
-        {
-            if (input.LastIndexOf('u') == -1 || input[input.LastIndexOf('u') - 1] != '\\')
-            {
-                return true;
-            }
-
-            return IsHexNumber(input.Substring(input.LastIndexOf('u')));
+            return input.LastIndexOf('\\') + 1 != input.Length - 1;
         }
 
         private static bool IsHexNumber(string input)
         {
-            const int lengthHex = 4;
-            if (input.Length > lengthHex + 1) // check if the hex number is at the end of the string
+            const int lengthHex = 5;
+            if (input.Length < lengthHex)
             {
-                return true;
+                return false;
             }
 
-            for (int i = 1; i < input.Length; i++)
+            for (int i = 1; i < lengthHex; i++)
             {
                 if (!IsHexDigit(input[i]))
                 {
@@ -81,18 +76,18 @@ namespace Json
 
         private static bool IsHexDigit(char c)
         {
-            return Uri.IsHexDigit(c);
+            return char.IsAsciiHexDigit(c);
         }
 
         private static bool IsControlCharacter(char character)
         {
-            const string controlCharacter = "\0\b\t\n\r";
-            return controlCharacter.Contains(character);
+            const int asciiSpace = 32;
+            return character < asciiSpace;
         }
 
         private static bool IsExcapeCharacter(char character)
         {
-            const string excapeCharacter = @"u\/0btnrf""";
+            const string excapeCharacter = @"u\0btnrf""";
             return excapeCharacter.Contains(character);
         }
     }

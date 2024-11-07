@@ -131,7 +131,24 @@ namespace Json.Facts
             Assert.False(IsJsonString(Quoted(@"a\u")));
             Assert.False(IsJsonString(Quoted(@"a\u123")));
         }
-
+        [Fact]
+        public void DoesEndWithAnFinishedHexNumber()
+        {
+            Assert.True(IsJsonString(Quoted(@"a\u345f")));
+            Assert.True(IsJsonString(Quoted(@"a\u1234")));
+        }
+        [Fact]
+        public void DoesContainMultipleValideHexNumber()
+        {
+            Assert.True(IsJsonString(Quoted(@"a\u345f  \u432d\uf345")));
+            Assert.True(IsJsonString(Quoted(@"a\u1234")));
+        }
+        [Fact]
+        public void DoesNotContainMultipleUnvalideHexNumber()
+        {
+            Assert.False(IsJsonString(Quoted(@"a\u123")));
+            Assert.False(IsJsonString(Quoted(@"a\u1234  a\u12q")));
+        }
         public static string Quoted(string text)
             => $"\"{text}\"";
     }
