@@ -6,7 +6,7 @@ namespace Json
     {
         public static bool IsJsonString(string input)
         {
-            return HasContent(input) && IsDoubleQuoted(input) && !ContainsControlCharacters(input) && ContainsExcapeCharacter(input);
+            return HasContent(input) && IsDoubleQuoted(input) && ContainsControlCharacters(input) && ContainsExcapeCharacter(input);
         }
 
         private static bool IsDoubleQuoted(string input)
@@ -21,25 +21,33 @@ namespace Json
 
         private static bool ContainsControlCharacters(string input)
         {
-            foreach (char character in input)
+            for (int i = 0; i < input.Length - 1; i++)
             {
-                if (char.IsControl(character))
+                if (IsControlCharacter(input[i + 1]))
                 {
-                    return true;
+                    return false;
                 }
             }
 
-            return false;
+            return true;
         }
 
         private static bool ContainsExcapeCharacter(string input)
         {
-            return IsReverseSolidusToTheEnd(input) && ContainsHexNumber(input);
-        }
+            for (int i = 0; i < input.Length - 1; i++)
+            {
+                if (input[i] == '\\' && (!IsExcapeCharacter(input[i + 1]) || i + 1 == input.Length - 1))
+                {
+                    if (i > 0 && input[i - 1] == '\\')
+                    {
+                        continue;
+                    }
 
-        private static bool IsReverseSolidusToTheEnd(string input)
-        {
-            return IsExcapeCharacter(input[input.IndexOf("\\") + 1]) && (input.IndexOf("\\") + 1 != input.Length - 1);
+                    return false;
+                }
+            }
+
+            return ContainsHexNumber(input);
         }
 
         private static bool ContainsHexNumber(string input)
@@ -54,45 +62,38 @@ namespace Json
 
         private static bool IsHexNumber(string input)
         {
-            if (input == "-1")
+            const int lengthHex = 4;
+            if (input.Length > lengthHex + 1) // check if the hex number is at the end of the string
             {
                 return true;
             }
 
-            int digits = 4;
-            if (input.Length > digits + 1) // check if the hex number is at the end of the string
+            for (int i = 1; i < input.Length; i++)
             {
-                return true;
-            }
-
-            for (int i = 1; i < input.Length - 1; i++)
-            {
-                if (IsHexDigit(input[i]))
+                if (!IsHexDigit(input[i]))
                 {
-                    digits--;
+                    return false;
                 }
             }
 
-            return digits == 0;
+            return true;
         }
 
         private static bool IsHexDigit(char c)
         {
-            return char.IsDigit(c) || (char.ToLower(c) >= 'a' && char.ToLower(c) <= 'f');
+            return Uri.IsHexDigit(c);
+        }
+
+        private static bool IsControlCharacter(char character)
+        {
+            const string controlCharacter = "\0\b\t\n\r";
+            return controlCharacter.Contains(character);
         }
 
         private static bool IsExcapeCharacter(char character)
         {
-            const string excapeCharacter = @"\\[^ntrbfv\u/""]";
-            for (int i = 0; i < excapeCharacter.Length; i++)
-            {
-                if (character == excapeCharacter[i])
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            const string excapeCharacter = @"u\/0btnrf""";
+            return excapeCharacter.Contains(character);
         }
     }
 }
