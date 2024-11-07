@@ -34,31 +34,31 @@ namespace Json
 
         private static bool ContainsExcapeCharacter(string input)
         {
-            for (int i = 0; i < input.Length - 1; i++)
+            return IsReverseSolidusToTheEnd(input) && ContainsHexNumber(input);
+        }
+
+        private static bool IsReverseSolidusToTheEnd(string input)
+        {
+            return IsExcapeCharacter(input[input.IndexOf("\\") + 1]) && (input.IndexOf("\\") + 1 != input.Length - 1);
+        }
+
+        private static bool ContainsHexNumber(string input)
+        {
+            if (input.LastIndexOf('u') == -1 || input[input.LastIndexOf('u') - 1] != '\\')
             {
-                if (input[i] == '\\' && i + 1 == input.Length - 1)
-                {
-                    return false;
-                }
-                else if (input[i] == '\\' && !char.IsLetter(input[i + 1]))
-                {
-                    return true;
-                }
-                else if (input[i] == '\\' && !IsExcapeCharacter(input[i + 1]))
-                {
-                    return false;
-                }
-                else if (input[i] == '\\' && input[i + 1] == 'u')
-                {
-                    return IsHexNumber(input.Substring(i + 1));
-                }
+                return true;
             }
 
-            return true;
+            return IsHexNumber(input.Substring(input.LastIndexOf('u')));
         }
 
         private static bool IsHexNumber(string input)
         {
+            if (input == "-1")
+            {
+                return true;
+            }
+
             int digits = 4;
             if (input.Length > digits + 1) // check if the hex number is at the end of the string
             {
@@ -83,7 +83,7 @@ namespace Json
 
         private static bool IsExcapeCharacter(char character)
         {
-            const string excapeCharacter = @"\\[^ntrbfv\u""]";
+            const string excapeCharacter = @"\\[^ntrbfv\u/""]";
             for (int i = 0; i < excapeCharacter.Length; i++)
             {
                 if (character == excapeCharacter[i])
