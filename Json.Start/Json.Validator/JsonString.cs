@@ -6,7 +6,7 @@ namespace Json
     {
         public static bool IsJsonString(string input)
         {
-            return HasContent(input) && IsDoubleQuoted(input) && ContainsControlCharacters(input) && ContainsExcapeCharacter(input);
+            return HasContent(input) && IsDoubleQuoted(input) && ContainsControlCharacters(input) && ContainsEscapeCharacter(input);
         }
 
         private static bool IsDoubleQuoted(string input)
@@ -32,16 +32,16 @@ namespace Json
             return true;
         }
 
-        private static bool ContainsExcapeCharacter(string input)
+        private static bool ContainsEscapeCharacter(string input)
         {
             for (int i = 0; i < input.Length - 1; i++)
             {
-                if (input[i] == '\\' && !char.IsWhiteSpace(input[i + 1]) && !IsExcapeCharacter(input[i + 1]) && input[i + 1] != '/')
+                if (input[i] == '\\' && !char.IsWhiteSpace(input[i + 1]) && !IsEscapeCharacter(input[i + 1]) && input[i + 1] != '/')
                 {
                     return false;
                 }
 
-                if (input[i] == '\\' && input[i + 1] == 'u' && !IsHexNumber(input.Substring(i + 1)) && input[i + 1] != '/')
+                if (input[i] == '\\' && input[i + 1] == 'u' && !IsHexNumber(input.Substring(i + 1)))
                 {
                     return false;
                 }
@@ -80,7 +80,7 @@ namespace Json
             return character < asciiSpace;
         }
 
-        private static bool IsExcapeCharacter(char character)
+        private static bool IsEscapeCharacter(char character)
         {
             const string excapeCharacter = @"u\0btnrf""";
             return excapeCharacter.Contains(character);
