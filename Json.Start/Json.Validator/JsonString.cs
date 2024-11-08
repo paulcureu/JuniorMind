@@ -58,7 +58,7 @@ namespace Json
                 return false;
             }
 
-            return input[index - 1] == '\\' && char.IsWhiteSpace(input[index + 1]);
+            return input[index - 1] == '\\';
         }
 
         private static bool IsHexNumber(string input)
