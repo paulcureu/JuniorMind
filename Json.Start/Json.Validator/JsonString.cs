@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 
 namespace Json
 {
@@ -36,7 +37,7 @@ namespace Json
         {
             for (int i = 0; i < input.Length - 1; i++)
             {
-                if (input[i] == '\\' && !char.IsWhiteSpace(input[i + 1]) && !IsEscapeCharacter(input[i + 1]) && input[i + 1] != '/')
+                if (input[i] == '\\' && !IsEscapeCharacter(input[i + 1]) && !ContainsEscapedReverseSolidusOrEscapedSolidus(input, i))
                 {
                     return false;
                 }
@@ -48,6 +49,21 @@ namespace Json
             }
 
             return input.LastIndexOf('\\') + 1 != input.Length - 1;
+        }
+
+        private static bool ContainsEscapedReverseSolidusOrEscapedSolidus(string input, int index)
+        {
+            if (input[index + 1] == '/')
+            {
+                return true;
+            }
+
+            if (index == 0)
+            {
+                return false;
+            }
+
+            return input[index - 1] == '\\' && char.IsWhiteSpace(input[index + 1]);
         }
 
         private static bool IsHexNumber(string input)
