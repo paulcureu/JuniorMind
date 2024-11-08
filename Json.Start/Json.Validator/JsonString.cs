@@ -37,33 +37,28 @@ namespace Json
         {
             for (int i = 0; i < input.Length - 1; i++)
             {
-                if (input[i] == '\\' && !IsEscapeCharacter(input[i + 1]) && !ContainsEscapedReverseSolidusOrEscapedSolidus(input, i))
+                if (input[i] != '\\')
                 {
-                    return false;
+                    continue;
                 }
 
-                if (input[i] == '\\' && input[i + 1] == 'u' && !IsHexNumber(input.Substring(i + 1)))
+                if (input[i + 1] == 'u' && !IsHexNumber(input.Substring(i + 1)) || !IsEscapeCharacter(input[i + 1]) && !ContainsEscapedReverseSolidus(input, i))
                 {
                     return false;
                 }
             }
 
-            return input.LastIndexOf('\\') + 1 != input.Length - 1;
+            return !input.EndsWith(@"\""");
         }
 
-        private static bool ContainsEscapedReverseSolidusOrEscapedSolidus(string input, int index)
+        private static bool ContainsEscapedReverseSolidus(string input, int index)
         {
-            if (input[index + 1] == '/')
-            {
-                return true;
-            }
-
             if (index == 0)
             {
                 return false;
             }
 
-            return input[index - 1] == '\\' && char.IsWhiteSpace(input[index + 1]);
+            return input[index - 1] == '\\';
         }
 
         private static bool IsHexNumber(string input)
@@ -98,7 +93,7 @@ namespace Json
 
         private static bool IsEscapeCharacter(char character)
         {
-            const string excapeCharacter = @"u\0btnrf""";
+            const string excapeCharacter = "\\/\"ubfnrt";
             return excapeCharacter.Contains(character);
         }
     }
