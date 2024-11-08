@@ -149,6 +149,12 @@ namespace Json.Facts
             Assert.False(IsJsonString(Quoted(@"a\u123")));
             Assert.False(IsJsonString(Quoted(@"a\u1234  a\u12q")));
         }
+        [Fact]
+        public void DoesNonContainJustBackSlase()
+        {
+            Assert.False(IsJsonString(Quoted(@"a \ ")));
+            Assert.False(IsJsonString(Quoted(@"a\ u1234  a\u12q")));
+        }
         public static string Quoted(string text)
             => $"\"{text}\"";
     }
