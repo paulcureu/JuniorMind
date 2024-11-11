@@ -37,7 +37,7 @@ namespace Json
         {
             for (int i = 0; i < input.Length - 1; i++)
             {
-                if (input[i] == '\\' && !IsHexNumber(input.Substring(i + 1)) && !IsEscapeCharacter(input, i))
+                if (input[i] == '\\' && !IsHexNumber(input.Substring(i + 1)) && !IsEscapeCharacter(input, ref i))
                 {
                     return false;
                 }
@@ -76,10 +76,16 @@ namespace Json
             return character < asciiSpace;
         }
 
-        private static bool IsEscapeCharacter(string input, int index)
+        private static bool IsEscapeCharacter(string input, ref int index)
         {
             const string excapeCharacter = "\\/\"bfnrt";
-            return excapeCharacter.Contains(input[index + 1]) || input[index - 1] == '\\';
+            if (input[index + 1] == '\\')
+            {
+                index++;
+                return true;
+            }
+
+            return excapeCharacter.Contains(input[index + 1]);
         }
     }
 }
