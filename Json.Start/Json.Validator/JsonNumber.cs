@@ -81,12 +81,7 @@ namespace Json
 
         private static bool IsFraction(string fractionPart)
         {
-            if (fractionPart == null)
-            {
-                return true;
-            }
-
-            return IsDigits(fractionPart.Substring(1));
+            return fractionPart == null || IsDigits(fractionPart.Substring(1));
         }
 
         private static bool IsExponent(string exponentPart)
@@ -105,17 +100,17 @@ namespace Json
             return IsDigits(exponentPart);
         }
 
-        private static bool IsDigits(string s)
+        private static bool IsDigits(string digits)
         {
-            for (int i = 0; i < s.Length; i++)
+            for (int i = 0; i < digits.Length; i++)
             {
-                if (!char.IsDigit(s[i]))
+                if (!char.IsDigit(digits[i]))
                 {
                     return false;
                 }
             }
 
-            return !string.IsNullOrEmpty(s);
+            return !string.IsNullOrEmpty(digits);
         }
     }
 }
