@@ -35,11 +35,22 @@ namespace Json
 
         private static bool ContainsEscapeCharacter(string input)
         {
-            for (int i = 0; i < input.Length - 1; i++)
+            int step = 1;
+            const int stepTwo = 2;
+            for (int i = 0; i < input.Length - 1; i += step)
             {
-                if (input[i] == '\\' && !IsHexNumber(input.Substring(i + 1)) && !IsEscapeCharacter(input, ref i))
+                if (input[i] == '\\')
                 {
-                    return false;
+                    if (!IsHexNumber(input.Substring(i + 1)) && !IsEscapeCharacter(input[i + 1]))
+                    {
+                        return false;
+                    }
+
+                    step = stepTwo;
+                }
+                else
+                {
+                    step = 1;
                 }
             }
 
@@ -76,16 +87,10 @@ namespace Json
             return character < asciiSpace;
         }
 
-        private static bool IsEscapeCharacter(string input, ref int index)
+        private static bool IsEscapeCharacter(char caracter)
         {
             const string excapeCharacter = "\\/\"bfnrt";
-            if (!excapeCharacter.Contains(input[index + 1]))
-            {
-                return false;
-            }
-
-            index++;
-            return true;
+            return excapeCharacter.Contains(caracter);
         }
     }
 }
