@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace Json
 {
@@ -8,65 +9,118 @@ namespace Json
     {
         public static bool IsJsonNumber(string input)
         {
-            return ExceptionalCase(input) && IsLetter(input) && IsNumber(input);
-        }
-
-        private static bool ExceptionalCase(string input)
-        {
-            return IsNullOrEmptyString(input) && IsFirstDigitZero(input) && IsExponentComplete(input);
-        }
-
-        private static bool IsNullOrEmptyString(string input)
-        {
-            return !string.IsNullOrEmpty(input);
-        }
-
-        private static bool IsFirstDigitZero(string input)
-        {
-            return input.Length <= 1 || input[0] != '0' || input.Contains('.');
-        }
-
-        private static bool IsExponentComplete(string input)
-        {
-            return input[^1] != '+' && input[^1] != '-' && input[^1] != 'e';
-        }
-
-        private static bool IsLetter(string input)
-        {
-            foreach (char c in input)
+            if (string.IsNullOrEmpty(input))
             {
-                if (char.IsLetter(c) && c != 'e' && c != 'E')
+                return false;
+            }
+
+            int dotIndex = input.IndexOf('.');
+            int exponentIndex = input.IndexOfAny(new[] { 'e', 'E' });
+
+            string integerPart = GetInteger(input, dotIndex, exponentIndex);
+            string fractionPart = GetFraction(input, dotIndex, exponentIndex);
+            string exponentPart = GetExponent(input, exponentIndex);
+
+            return IsInteger(integerPart) && IsFraction(fractionPart) && IsExponent(exponentPart);
+        }
+
+        private static string GetInteger(string input, int dotIndex, int exponentIndex)
+        {
+            if (dotIndex == -1 && exponentIndex == -1)
+            {
+                return input;
+            }
+
+            if (dotIndex != -1)
+            {
+                return input.Substring(0, dotIndex);
+            }
+
+            return input.Substring(0, exponentIndex);
+        }
+
+        private static string GetFraction(string input, int dotIndex, int exponentIndex)
+        {
+            if (dotIndex == -1)
+            {
+                return null;
+            }
+
+            if (exponentIndex == -1 || dotIndex > exponentIndex)
+            {
+                return input.Substring(dotIndex);
+            }
+
+            return input.Substring(dotIndex, exponentIndex - dotIndex);
+        }
+
+        private static string GetExponent(string input, int exponentIndex)
+        {
+            if (exponentIndex == -1)
+            {
+                return null;
+            }
+
+            return input.Substring(exponentIndex);
+        }
+
+        private static bool IsInteger(string integerPart)
+        {
+            if (string.IsNullOrEmpty(integerPart))
+            {
+                return false;
+            }
+
+            if (integerPart.Length > 1 && integerPart.StartsWith("0"))
+            {
+                return false;
+            }
+
+            if (integerPart.StartsWith("-"))
+            {
+                integerPart = integerPart.Substring(1);
+            }
+
+            return IsDigits(integerPart);
+        }
+
+        private static bool IsFraction(string fractionPart)
+        {
+            if (fractionPart == null)
+            {
+                return true;
+            }
+
+            return IsDigits(fractionPart.Substring(1));
+        }
+
+        private static bool IsExponent(string exponentPart)
+        {
+            if (exponentPart == null)
+            {
+                return true;
+            }
+
+            exponentPart = exponentPart.Substring(1);
+            if (exponentPart.StartsWith("+") || exponentPart.StartsWith("-"))
+            {
+                exponentPart = exponentPart.Substring(1);
+            }
+
+            return IsDigits(exponentPart);
+        }
+
+        private static bool IsDigits(string s)
+        {
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (!char.IsDigit(s[i]))
                 {
                     return false;
                 }
             }
 
-            return true;
-        }
-
-        private static bool ExponentIsAfterTheFraction(string input)
-        {
-            return !(input.Contains('e') && input.Contains('.')) || input.IndexOf('e') > input.IndexOf('.');
-        }
-
-        private static bool ToManyExponents(string input)
-        {
-            return input.Count(c => c == 'e' || c == 'E') <= 1;
-        }
-
-        private static bool IsNumber(string input)
-        {
-            return !NumberEndsWithDot(input) && IsMoreThanOneFractionalPart(input) && ExponentIsAfterTheFraction(input) && ToManyExponents(input);
-        }
-
-        private static bool NumberEndsWithDot(string input)
-        {
-            return input.EndsWith(".");
-        }
-
-        private static bool IsMoreThanOneFractionalPart(string input)
-        {
-            return input.Count(c => c == '.') <= 1;
+            return !string.IsNullOrEmpty(s);
         }
     }
 }
