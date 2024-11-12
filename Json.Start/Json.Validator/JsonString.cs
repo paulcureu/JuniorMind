@@ -36,9 +36,9 @@ namespace Json
         private static bool ContainsEscapeCharacter(string input)
         {
             int step = 1;
-            const int stepTwo = 2;
             for (int i = 0; i < input.Length - 1; i += step)
             {
+                step = 1;
                 if (input[i] == '\\')
                 {
                     if (!IsHexNumber(input.Substring(i + 1)) && !IsEscapeCharacter(input[i + 1]))
@@ -46,11 +46,7 @@ namespace Json
                         return false;
                     }
 
-                    step = stepTwo;
-                }
-                else
-                {
-                    step = 1;
+                    step++;
                 }
             }
 
