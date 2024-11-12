@@ -79,13 +79,13 @@ namespace Json
         private static bool IsEscapeCharacter(string input, ref int index)
         {
             const string excapeCharacter = "\\/\"bfnrt";
-            if (input[index + 1] == '\\')
+            if (!excapeCharacter.Contains(input[index + 1]))
             {
-                index++;
-                return true;
+                return false;
             }
 
-            return excapeCharacter.Contains(input[index + 1]);
+            index++;
+            return true;
         }
     }
 }
