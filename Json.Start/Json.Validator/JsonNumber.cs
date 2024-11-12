@@ -66,11 +66,6 @@ namespace Json
 
         private static bool IsInteger(string integerPart)
         {
-            if (string.IsNullOrEmpty(integerPart))
-            {
-                return false;
-            }
-
             if (integerPart.Length > 1 && integerPart.StartsWith("0"))
             {
                 return false;
