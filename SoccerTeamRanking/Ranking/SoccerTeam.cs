@@ -3,7 +3,7 @@
     public class SoccerTeam
     {
         private readonly string name;
-        private readonly int points;
+        private int points;
 
         public SoccerTeam(string name, int points)
         {
@@ -11,7 +11,7 @@
             this.points = points;
         }
 
-        public bool HasFewerPoint(SoccerTeam otherTeam)
+        public bool HasFewerPointsThan(SoccerTeam otherTeam)
         {
             return points < otherTeam.points;
         }
@@ -19,6 +19,11 @@
         public bool IsNameEqual(SoccerTeam team)
         {
             return name == team.name;
+        }
+
+        public int AddPoints(int newPoints)
+        {
+            return points += newPoints;
         }
     }
 }

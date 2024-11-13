@@ -3,20 +3,132 @@ namespace Ranking.Facts
     public class RankingFacts
     {
         [Fact]
-        public void CheckAddNewTeam()
+        public void AddTeam_WhenTeamDoesNotExist_ShouldAddTeam()
         {
-            SoccerTeam t1 = new SoccerTeam("Bayern", 30);
-            SoccerTeam t2 = new SoccerTeam("Manchester Utd", 34);
-            SoccerTeam t3 = new SoccerTeam("PSV", 32);
-            SoccerTeam t4 = new SoccerTeam("Arsenal", 24);
-            SoccerTeam t5 = new SoccerTeam("Sevilla", 15);
+            SoccerTeam t1 = new SoccerTeam("Real Madrid", 36);
+            SoccerTeam t2 = new SoccerTeam("Barcelona", 32);
+            SoccerTeam t3 = new SoccerTeam("Bayern Munich", 28);
+            GeneralRanking ranking = new GeneralRanking(new SoccerTeam[] { t1, t2, t3 });
 
-            SoccerTeam[] teams = new SoccerTeam[] { t1, t2, t3, t4 };
+            SoccerTeam newTeam = new SoccerTeam("Juventus", 20);
 
-            GeneralRanking ranking = new GeneralRanking(teams);
-            ranking.AddTeam(t5);
+            ranking.AddTeam(newTeam);
 
-            Assert.Equal(5, ranking.GetTeamPosition(t5));
+            int teamPosition = ranking.GetTeamPositionByName(newTeam);
+            Assert.Equal(4, teamPosition);
+        }
+
+        [Fact]
+        public void AddTeam_WhenTeamExists_ShouldNotAddTeam()
+        {
+            SoccerTeam t1 = new SoccerTeam("Real Madrid", 36);
+            SoccerTeam t2 = new SoccerTeam("Barcelona", 32);
+            SoccerTeam t3 = new SoccerTeam("Bayern Munich", 28);
+            GeneralRanking ranking = new GeneralRanking(new SoccerTeam[] { t1, t2, t3 });
+
+            ranking.AddTeam(t1);
+
+            int teamPosition = ranking.GetTeamPositionByName(t1);
+            Assert.Equal(1, teamPosition);
+        }
+
+        [Fact]
+        public void GetTeamByPosition_ShouldReturnCorrectTeam()
+        {
+            SoccerTeam t1 = new SoccerTeam("Real Madrid", 36);
+            SoccerTeam t2 = new SoccerTeam("Barcelona", 32);
+            SoccerTeam t3 = new SoccerTeam("Bayern Munich", 28);
+            GeneralRanking ranking = new GeneralRanking(new SoccerTeam[] { t1, t2, t3 });
+
+            SoccerTeam team = ranking.GetTeamByPosition(2);
+
+            Assert.Equal(t2, team);
+        }
+
+        [Fact]
+        public void GetTeamPositionByName_ShouldReturnCorrectPosition()
+        {
+            SoccerTeam t1 = new SoccerTeam("Real Madrid", 36);
+            SoccerTeam t2 = new SoccerTeam("Barcelona", 32);
+            SoccerTeam t3 = new SoccerTeam("Bayern Munich", 28);
+            GeneralRanking ranking = new GeneralRanking(new SoccerTeam[] { t1, t2, t3 });
+
+            int position = ranking.GetTeamPositionByName(t3);
+
+            Assert.Equal(3, position);
+        }
+
+        [Fact]
+        public void GetTeamPositionByName_WhenTeamDoesNotExist_ShouldReturnMinusOne()
+        {
+            SoccerTeam t1 = new SoccerTeam("Real Madrid", 36);
+            SoccerTeam t2 = new SoccerTeam("Barcelona", 32);
+            SoccerTeam t3 = new SoccerTeam("Bayern Munich", 28);
+            GeneralRanking ranking = new GeneralRanking(new SoccerTeam[] { t1, t2, t3 });
+
+            int position = ranking.GetTeamPositionByName(new SoccerTeam("Chelsea", 25));
+
+            Assert.Equal(-1, position);
+        }
+
+        [Fact]
+        public void UpdateTeamPoints_WhenTeamsDraw_ShouldUpdatePointsCorrectly()
+        {
+            SoccerTeam t1 = new SoccerTeam("Real Madrid", 36);
+            SoccerTeam t2 = new SoccerTeam("Barcelona", 32);
+            SoccerTeam t3 = new SoccerTeam("Bayern Munich", 28);
+            GeneralRanking ranking = new GeneralRanking(new SoccerTeam[] { t1, t2, t3 });
+
+            ranking.UpdateTeamPoints(t1, t2, 1, 1);
+
+            Assert.Equal(37, t1.AddPoints(0));
+            Assert.Equal(33, t2.AddPoints(0));
+        }
+
+        [Fact]
+        public void UpdateTeamPoints_WhenTeam1Wins_ShouldUpdatePointsCorrectly()
+        {
+            SoccerTeam t1 = new SoccerTeam("Real Madrid", 36);
+            SoccerTeam t2 = new SoccerTeam("Barcelona", 32);
+            SoccerTeam t3 = new SoccerTeam("Bayern Munich", 28);
+            GeneralRanking ranking = new GeneralRanking(new SoccerTeam[] { t1, t2, t3 });
+
+            ranking.UpdateTeamPoints(t1, t2, 2, 1);
+
+            Assert.Equal(39, t1.AddPoints(0));
+            Assert.Equal(32, t2.AddPoints(0));
+        }
+
+        [Fact]
+        public void UpdateTeamPoints_WhenTeam2Wins_ShouldUpdatePointsCorrectly()
+        {
+            SoccerTeam t1 = new SoccerTeam("Real Madrid", 36);
+            SoccerTeam t2 = new SoccerTeam("Barcelona", 32);
+            SoccerTeam t3 = new SoccerTeam("Bayern Munich", 28);
+            GeneralRanking ranking = new GeneralRanking(new SoccerTeam[] { t1, t2, t3 });
+
+            ranking.UpdateTeamPoints(t1, t2, 0, 1);
+
+            Assert.Equal(36, t1.AddPoints(0));
+            Assert.Equal(35, t2.AddPoints(0));
+        }
+
+        [Fact]
+        public void Sort_ShouldOrderTeamsCorrectly()
+        {
+            SoccerTeam t1 = new SoccerTeam("Real Madrid", 36);
+            SoccerTeam t2 = new SoccerTeam("Barcelona", 32);
+            SoccerTeam t3 = new SoccerTeam("Bayern Munich", 28);
+            GeneralRanking ranking = new GeneralRanking(new SoccerTeam[] { t1, t2, t3 });
+
+            SoccerTeam team4 = new SoccerTeam("Juventus", 40);
+            ranking.AddTeam(team4);
+
+            int team1Position = ranking.GetTeamPositionByName(t1);
+            int team4Position = ranking.GetTeamPositionByName(team4);
+
+            Assert.Equal(2, team1Position);
+            Assert.Equal(1, team4Position);
         }
     }
 }
