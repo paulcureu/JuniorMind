@@ -1,7 +1,4 @@
 using System;
-using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
 
 namespace Json
 {
@@ -33,47 +30,47 @@ namespace Json
 
             if (dotIndex != -1)
             {
-                return input.Substring(0, dotIndex);
+                return input[..dotIndex];
             }
 
-            return input.Substring(0, exponentIndex);
+            return input[..exponentIndex];
         }
 
         private static string GetFraction(string input, int dotIndex, int exponentIndex)
         {
             if (dotIndex == -1)
             {
-                return null;
+                return string.Empty;
             }
 
-            if (exponentIndex == -1 || dotIndex > exponentIndex)
+            if (dotIndex > exponentIndex)
             {
-                return input.Substring(dotIndex);
+                return input[dotIndex..];
             }
 
-            return input.Substring(dotIndex, exponentIndex - dotIndex);
+            return input[dotIndex..exponentIndex];
         }
 
         private static string GetExponent(string input, int exponentIndex)
         {
             if (exponentIndex == -1)
             {
-                return null;
+                return string.Empty;
             }
 
-            return input.Substring(exponentIndex);
+            return input[exponentIndex..];
         }
 
         private static bool IsInteger(string integerPart)
         {
+            if (integerPart.StartsWith("-"))
+            {
+                integerPart = integerPart[1..];
+            }
+
             if (integerPart.Length > 1 && integerPart.StartsWith("0"))
             {
                 return false;
-            }
-
-            if (integerPart.StartsWith("-"))
-            {
-                integerPart = integerPart.Substring(1);
             }
 
             return IsDigits(integerPart);
@@ -81,20 +78,20 @@ namespace Json
 
         private static bool IsFraction(string fractionPart)
         {
-            return fractionPart == null || IsDigits(fractionPart.Substring(1));
+            return string.IsNullOrEmpty(fractionPart) || IsDigits(fractionPart[1..]);
         }
 
         private static bool IsExponent(string exponentPart)
         {
-            if (exponentPart == null)
+            if (string.IsNullOrEmpty(exponentPart))
             {
                 return true;
             }
 
-            exponentPart = exponentPart.Substring(1);
+            exponentPart = exponentPart[1..];
             if (exponentPart.StartsWith("+") || exponentPart.StartsWith("-"))
             {
-                exponentPart = exponentPart.Substring(1);
+                exponentPart = exponentPart[1..];
             }
 
             return IsDigits(exponentPart);
@@ -102,9 +99,9 @@ namespace Json
 
         private static bool IsDigits(string digits)
         {
-            for (int i = 0; i < digits.Length; i++)
+            foreach (char digit in digits)
             {
-                if (!char.IsDigit(digits[i]))
+                if (!char.IsDigit(digit))
                 {
                     return false;
                 }
