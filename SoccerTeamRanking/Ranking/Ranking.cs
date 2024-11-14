@@ -12,12 +12,9 @@
 
         public void AddTeam(SoccerTeam team)
         {
-            for (int i = 0; i < teams.Length; i++)
+            if (Array.Exists(teams, existingTeam => existingTeam == team))
             {
-                if (teams[i].IsNameEqual(team))
-                {
-                    return;
-                }
+                return;
             }
 
             Array.Resize(ref teams, teams.Length + 1);
@@ -30,11 +27,11 @@
             return teams[position - 1];
         }
 
-        public int GetTeamPositionByName(SoccerTeam team)
+        public int GetTeamPosition(SoccerTeam team)
         {
             for (int i = 0; i < teams.Length; i++)
             {
-                if (teams[i].IsNameEqual(team))
+                if (teams[i] == team)
                 {
                     return i + 1;
                 }
@@ -43,50 +40,57 @@
             return -1;
         }
 
-        public void UpdateTeamPoints(SoccerTeam team1, SoccerTeam team2, int team1GameResult, int team2GameResult)
+        public void Update(SoccerTeam homeTeam, SoccerTeam awayTeam, int homeResult, int awayResult)
         {
-            if (team1 == null || team2 == null)
+            if (homeTeam == null || awayTeam == null)
             {
                 return;
             }
 
             const int DrawPoints = 1;
             const int WinPoints = 3;
-            if (team1GameResult == team2GameResult)
+
+            if (homeResult == awayResult)
             {
-                team1.AddPoints(DrawPoints);
-                team2.AddPoints(DrawPoints);
+                homeTeam.AddPoints(DrawPoints);
+                awayTeam.AddPoints(DrawPoints);
             }
-            else if (team1GameResult > team2GameResult)
+            else if (homeResult > awayResult)
             {
-                team1.AddPoints(WinPoints);
+                homeTeam.AddPoints(WinPoints);
             }
             else
             {
-                team2.AddPoints(WinPoints);
+                awayTeam.AddPoints(WinPoints);
             }
 
             Sort();
         }
 
-        private static void Swap(SoccerTeam[] teams, int firstIndex, int secondIndex)
+        private void Swap(int firstIndex, int secondIndex)
         {
-            SoccerTeam temp = teams[firstIndex];
-            teams[firstIndex] = teams[secondIndex];
-            teams[secondIndex] = temp;
+            (teams[firstIndex], teams[secondIndex]) = (teams[secondIndex], teams[firstIndex]);
         }
 
         private void Sort()
         {
+            bool swapped;
             int n = teams.Length;
             for (int i = 0; i < n; i++)
             {
+                swapped = false;
                 for (int j = 0; j < n - i - 1; j++)
                 {
                     if (teams[j].HasFewerPointsThan(teams[j + 1]))
                     {
-                        Swap(teams, j, j + 1);
+                        Swap(j, j + 1);
+                        swapped = true;
                     }
+                }
+
+                if (!swapped)
+                {
+                    break;
                 }
             }
         }

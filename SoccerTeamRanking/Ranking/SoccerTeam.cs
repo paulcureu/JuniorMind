@@ -16,14 +16,14 @@
             return points < otherTeam.points;
         }
 
-        public bool IsNameEqual(SoccerTeam team)
-        {
-            return name == team.name;
-        }
-
         public int AddPoints(int newPoints)
         {
             return points += newPoints;
+        }
+
+        public int GetPoints()
+        {
+            return points;
         }
     }
 }

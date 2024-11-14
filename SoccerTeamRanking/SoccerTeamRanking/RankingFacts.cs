@@ -14,7 +14,7 @@ namespace Ranking.Facts
 
             ranking.AddTeam(newTeam);
 
-            int teamPosition = ranking.GetTeamPositionByName(newTeam);
+            int teamPosition = ranking.GetTeamPosition(newTeam);
             Assert.Equal(4, teamPosition);
         }
 
@@ -28,7 +28,7 @@ namespace Ranking.Facts
 
             ranking.AddTeam(t1);
 
-            int teamPosition = ranking.GetTeamPositionByName(t1);
+            int teamPosition = ranking.GetTeamPosition(t1);
             Assert.Equal(1, teamPosition);
         }
 
@@ -53,7 +53,7 @@ namespace Ranking.Facts
             SoccerTeam t3 = new SoccerTeam("Bayern Munich", 28);
             GeneralRanking ranking = new GeneralRanking(new SoccerTeam[] { t1, t2, t3 });
 
-            int position = ranking.GetTeamPositionByName(t3);
+            int position = ranking.GetTeamPosition(t3);
 
             Assert.Equal(3, position);
         }
@@ -66,7 +66,7 @@ namespace Ranking.Facts
             SoccerTeam t3 = new SoccerTeam("Bayern Munich", 28);
             GeneralRanking ranking = new GeneralRanking(new SoccerTeam[] { t1, t2, t3 });
 
-            int position = ranking.GetTeamPositionByName(new SoccerTeam("Chelsea", 25));
+            int position = ranking.GetTeamPosition(new SoccerTeam("Chelsea", 25));
 
             Assert.Equal(-1, position);
         }
@@ -79,7 +79,7 @@ namespace Ranking.Facts
             SoccerTeam t3 = new SoccerTeam("Bayern Munich", 28);
             GeneralRanking ranking = new GeneralRanking(new SoccerTeam[] { t1, t2, t3 });
 
-            ranking.UpdateTeamPoints(t1, t2, 1, 1);
+            ranking.Update(t1, t2, 1, 1);
 
             Assert.Equal(37, t1.AddPoints(0));
             Assert.Equal(33, t2.AddPoints(0));
@@ -93,7 +93,7 @@ namespace Ranking.Facts
             SoccerTeam t3 = new SoccerTeam("Bayern Munich", 28);
             GeneralRanking ranking = new GeneralRanking(new SoccerTeam[] { t1, t2, t3 });
 
-            ranking.UpdateTeamPoints(t1, t2, 2, 1);
+            ranking.Update(t1, t2, 2, 1);
 
             Assert.Equal(39, t1.AddPoints(0));
             Assert.Equal(32, t2.AddPoints(0));
@@ -107,7 +107,7 @@ namespace Ranking.Facts
             SoccerTeam t3 = new SoccerTeam("Bayern Munich", 28);
             GeneralRanking ranking = new GeneralRanking(new SoccerTeam[] { t1, t2, t3 });
 
-            ranking.UpdateTeamPoints(t1, t2, 0, 1);
+            ranking.Update(t1, t2, 0, 1);
 
             Assert.Equal(36, t1.AddPoints(0));
             Assert.Equal(35, t2.AddPoints(0));
@@ -124,8 +124,8 @@ namespace Ranking.Facts
             SoccerTeam team4 = new SoccerTeam("Juventus", 40);
             ranking.AddTeam(team4);
 
-            int team1Position = ranking.GetTeamPositionByName(t1);
-            int team4Position = ranking.GetTeamPositionByName(team4);
+            int team1Position = ranking.GetTeamPosition(t1);
+            int team4Position = ranking.GetTeamPosition(team4);
 
             Assert.Equal(2, team1Position);
             Assert.Equal(1, team4Position);
