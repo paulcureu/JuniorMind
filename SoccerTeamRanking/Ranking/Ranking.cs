@@ -4,22 +4,21 @@
     {
         private SoccerTeam[] teams;
 
-        public GeneralRanking(SoccerTeam[] teams)
+        public GeneralRanking()
         {
-            this.teams = teams;
-            Sort();
+            teams = new SoccerTeam[0];
         }
 
         public void AddTeam(SoccerTeam team)
         {
-            if (Array.Exists(teams, existingTeam => existingTeam == team))
+            if (GetTeamPosition(team) != -1)
             {
                 return;
             }
 
             Array.Resize(ref teams, teams.Length + 1);
             teams[^1] = team;
-            Sort();
+            QuickSort(teams, 0, teams.Length - 1);
         }
 
         public SoccerTeam GetTeamByPosition(int position)
@@ -64,35 +63,42 @@
                 awayTeam.AddPoints(WinPoints);
             }
 
-            Sort();
+            QuickSort(teams, 0, teams.Length - 1);
+        }
+
+        private void QuickSort(SoccerTeam[] teams, int left, int right)
+        {
+            if (left >= right)
+            {
+                return;
+            }
+
+            int pivotIndex = Partition(teams, left, right);
+            QuickSort(teams, left, pivotIndex - 1);
+            QuickSort(teams, pivotIndex + 1, right);
+        }
+
+        private int Partition(SoccerTeam[] teams, int left, int right)
+        {
+            int pivot = teams[right].GetPoints();
+            int i = left - 1;
+
+            for (int j = left; j < right; j++)
+            {
+                if (teams[j].GetPoints() >= pivot)
+                {
+                    i++;
+                    Swap(i, j);
+                }
+            }
+
+            Swap(i + 1, right);
+            return i + 1;
         }
 
         private void Swap(int firstIndex, int secondIndex)
         {
             (teams[firstIndex], teams[secondIndex]) = (teams[secondIndex], teams[firstIndex]);
-        }
-
-        private void Sort()
-        {
-            bool swapped;
-            int n = teams.Length;
-            for (int i = 0; i < n; i++)
-            {
-                swapped = false;
-                for (int j = 0; j < n - i - 1; j++)
-                {
-                    if (teams[j].HasFewerPointsThan(teams[j + 1]))
-                    {
-                        Swap(j, j + 1);
-                        swapped = true;
-                    }
-                }
-
-                if (!swapped)
-                {
-                    break;
-                }
-            }
         }
     }
 }

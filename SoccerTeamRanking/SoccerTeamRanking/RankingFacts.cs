@@ -8,10 +8,12 @@ namespace Ranking.Facts
             SoccerTeam t1 = new SoccerTeam("Real Madrid", 36);
             SoccerTeam t2 = new SoccerTeam("Barcelona", 32);
             SoccerTeam t3 = new SoccerTeam("Bayern Munich", 28);
-            GeneralRanking ranking = new GeneralRanking(new SoccerTeam[] { t1, t2, t3 });
+            GeneralRanking ranking = new GeneralRanking();
 
             SoccerTeam newTeam = new SoccerTeam("Juventus", 20);
-
+            ranking.AddTeam(t1);
+            ranking.AddTeam(t2);
+            ranking.AddTeam(t3);
             ranking.AddTeam(newTeam);
 
             int teamPosition = ranking.GetTeamPosition(newTeam);
@@ -24,9 +26,11 @@ namespace Ranking.Facts
             SoccerTeam t1 = new SoccerTeam("Real Madrid", 36);
             SoccerTeam t2 = new SoccerTeam("Barcelona", 32);
             SoccerTeam t3 = new SoccerTeam("Bayern Munich", 28);
-            GeneralRanking ranking = new GeneralRanking(new SoccerTeam[] { t1, t2, t3 });
+            GeneralRanking ranking = new GeneralRanking();
 
             ranking.AddTeam(t1);
+            ranking.AddTeam(t2);
+            ranking.AddTeam(t3);
 
             int teamPosition = ranking.GetTeamPosition(t1);
             Assert.Equal(1, teamPosition);
@@ -38,7 +42,10 @@ namespace Ranking.Facts
             SoccerTeam t1 = new SoccerTeam("Real Madrid", 36);
             SoccerTeam t2 = new SoccerTeam("Barcelona", 32);
             SoccerTeam t3 = new SoccerTeam("Bayern Munich", 28);
-            GeneralRanking ranking = new GeneralRanking(new SoccerTeam[] { t1, t2, t3 });
+            GeneralRanking ranking = new GeneralRanking();
+            ranking.AddTeam(t1);
+            ranking.AddTeam(t2);
+            ranking.AddTeam(t3);
 
             SoccerTeam team = ranking.GetTeamByPosition(2);
 
@@ -51,7 +58,10 @@ namespace Ranking.Facts
             SoccerTeam t1 = new SoccerTeam("Real Madrid", 36);
             SoccerTeam t2 = new SoccerTeam("Barcelona", 32);
             SoccerTeam t3 = new SoccerTeam("Bayern Munich", 28);
-            GeneralRanking ranking = new GeneralRanking(new SoccerTeam[] { t1, t2, t3 });
+            GeneralRanking ranking = new GeneralRanking();
+            ranking.AddTeam(t1);
+            ranking.AddTeam(t2);
+            ranking.AddTeam(t3);
 
             int position = ranking.GetTeamPosition(t3);
 
@@ -64,7 +74,10 @@ namespace Ranking.Facts
             SoccerTeam t1 = new SoccerTeam("Real Madrid", 36);
             SoccerTeam t2 = new SoccerTeam("Barcelona", 32);
             SoccerTeam t3 = new SoccerTeam("Bayern Munich", 28);
-            GeneralRanking ranking = new GeneralRanking(new SoccerTeam[] { t1, t2, t3 });
+            GeneralRanking ranking = new GeneralRanking();
+            ranking.AddTeam(t1);
+            ranking.AddTeam(t2);
+            ranking.AddTeam(t3);
 
             int position = ranking.GetTeamPosition(new SoccerTeam("Chelsea", 25));
 
@@ -77,7 +90,10 @@ namespace Ranking.Facts
             SoccerTeam t1 = new SoccerTeam("Real Madrid", 36);
             SoccerTeam t2 = new SoccerTeam("Barcelona", 32);
             SoccerTeam t3 = new SoccerTeam("Bayern Munich", 28);
-            GeneralRanking ranking = new GeneralRanking(new SoccerTeam[] { t1, t2, t3 });
+            GeneralRanking ranking = new GeneralRanking();
+            ranking.AddTeam(t1);
+            ranking.AddTeam(t2);
+            ranking.AddTeam(t3);
 
             ranking.Update(t1, t2, 1, 1);
 
@@ -91,7 +107,10 @@ namespace Ranking.Facts
             SoccerTeam t1 = new SoccerTeam("Real Madrid", 36);
             SoccerTeam t2 = new SoccerTeam("Barcelona", 32);
             SoccerTeam t3 = new SoccerTeam("Bayern Munich", 28);
-            GeneralRanking ranking = new GeneralRanking(new SoccerTeam[] { t1, t2, t3 });
+            GeneralRanking ranking = new GeneralRanking();
+            ranking.AddTeam(t1);
+            ranking.AddTeam(t2);
+            ranking.AddTeam(t3);
 
             ranking.Update(t1, t2, 2, 1);
 
@@ -105,7 +124,11 @@ namespace Ranking.Facts
             SoccerTeam t1 = new SoccerTeam("Real Madrid", 36);
             SoccerTeam t2 = new SoccerTeam("Barcelona", 32);
             SoccerTeam t3 = new SoccerTeam("Bayern Munich", 28);
-            GeneralRanking ranking = new GeneralRanking(new SoccerTeam[] { t1, t2, t3 });
+            GeneralRanking ranking = new GeneralRanking();
+
+            ranking.AddTeam(t1);
+            ranking.AddTeam(t2);
+            ranking.AddTeam(t3);
 
             ranking.Update(t1, t2, 0, 1);
 
@@ -119,7 +142,10 @@ namespace Ranking.Facts
             SoccerTeam t1 = new SoccerTeam("Real Madrid", 36);
             SoccerTeam t2 = new SoccerTeam("Barcelona", 32);
             SoccerTeam t3 = new SoccerTeam("Bayern Munich", 28);
-            GeneralRanking ranking = new GeneralRanking(new SoccerTeam[] { t1, t2, t3 });
+            GeneralRanking ranking = new GeneralRanking();
+            ranking.AddTeam(t1);
+            ranking.AddTeam(t2);
+            ranking.AddTeam(t3);
 
             SoccerTeam team4 = new SoccerTeam("Juventus", 40);
             ranking.AddTeam(team4);
