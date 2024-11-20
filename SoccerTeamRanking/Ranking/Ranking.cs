@@ -18,7 +18,7 @@
 
             Array.Resize(ref teams, teams.Length + 1);
             teams[^1] = team;
-            QuickSort(teams, 0, teams.Length - 1);
+            InsertionSort(teams);
         }
 
         public SoccerTeam GetTeamByPosition(int position)
@@ -63,42 +63,23 @@
                 awayTeam.AddPoints(WinPoints);
             }
 
-            QuickSort(teams, 0, teams.Length - 1);
+            InsertionSort(teams);
         }
 
-        private void QuickSort(SoccerTeam[] teams, int left, int right)
+        static void InsertionSort(SoccerTeam[] teams)
         {
-            if (left >= right)
+            for (int i = 1; i < teams.Length; i++)
             {
-                return;
-            }
-
-            int pivotIndex = Partition(teams, left, right);
-            QuickSort(teams, left, pivotIndex - 1);
-            QuickSort(teams, pivotIndex + 1, right);
-        }
-
-        private int Partition(SoccerTeam[] teams, int left, int right)
-        {
-            int pivot = teams[right].GetPoints();
-            int i = left - 1;
-
-            for (int j = left; j < right; j++)
-            {
-                if (teams[j].GetPoints() >= pivot)
+                SoccerTeam current = teams[i];
+                int j = i - 1;
+                while (j >= 0 && teams[j].GetPoints() < current.GetPoints())
                 {
-                    i++;
-                    Swap(i, j);
+                    teams[j + 1] = teams[j];
+                    j--;
                 }
+
+                teams[j + 1] = current;
             }
-
-            Swap(i + 1, right);
-            return i + 1;
-        }
-
-        private void Swap(int firstIndex, int secondIndex)
-        {
-            (teams[firstIndex], teams[secondIndex]) = (teams[secondIndex], teams[firstIndex]);
         }
     }
 }
