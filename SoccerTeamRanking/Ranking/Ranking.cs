@@ -18,7 +18,7 @@
 
             Array.Resize(ref teams, teams.Length + 1);
             teams[^1] = team;
-            InsertionSort(teams);
+            InsertionSort();
         }
 
         public SoccerTeam GetTeamByPosition(int position)
@@ -63,22 +63,19 @@
                 awayTeam.AddPoints(WinPoints);
             }
 
-            InsertionSort(teams);
+            InsertionSort();
         }
 
-        static void InsertionSort(SoccerTeam[] teams)
+        public void InsertionSort()
         {
             for (int i = 1; i < teams.Length; i++)
             {
-                SoccerTeam current = teams[i];
-                int j = i - 1;
-                while (j >= 0 && teams[j].GetPoints() < current.GetPoints())
+                int j = i;
+                while (j > 0 && teams[j - 1].HasFewerPointsThan(teams[j]))
                 {
-                    teams[j + 1] = teams[j];
+                    (teams[j - 1], teams[j]) = (teams[j], teams[j - 1]);
                     j--;
                 }
-
-                teams[j + 1] = current;
             }
         }
     }

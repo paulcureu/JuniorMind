@@ -20,10 +20,5 @@
         {
             return points += newPoints;
         }
-
-        public int GetPoints()
-        {
-            return points;
-        }
     }
 }
