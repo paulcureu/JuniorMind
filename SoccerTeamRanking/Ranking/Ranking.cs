@@ -16,9 +16,36 @@
                 return;
             }
 
+            int position = BinarySerch(team);
             Array.Resize(ref teams, teams.Length + 1);
-            teams[^1] = team;
-            InsertionSort();
+
+            for (int i = teams.Length - 1; i > position; i--)
+            {
+                teams[i] = teams[i - 1];
+            }
+
+            teams[position] = team;
+        }
+
+        public int BinarySerch(SoccerTeam team)
+        {
+            int left = 0;
+            int right = teams.Length - 1;
+
+            while (left <= right)
+            {
+                int mid = (left + right) / 2;
+                if (teams[mid].HasFewerPointsThan(team))
+                {
+                    right = mid - 1;
+                }
+                else
+                {
+                    left = mid + 1;
+                }
+            }
+
+            return left;
         }
 
         public SoccerTeam GetTeamByPosition(int position)
