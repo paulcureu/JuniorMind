@@ -70,11 +70,9 @@
         {
             for (int i = 1; i < teams.Length; i++)
             {
-                int j = i;
-                while (j > 0 && teams[j - 1].HasFewerPointsThan(teams[j]))
+                for (int j = i; j > 0 && teams[j - 1].HasFewerPointsThan(teams[j]); j--)
                 {
                     (teams[j - 1], teams[j]) = (teams[j], teams[j - 1]);
-                    j--;
                 }
             }
         }
